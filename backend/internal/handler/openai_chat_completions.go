@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	pkghttputil "github.com/hxk622/OmniRouter/internal/pkg/httputil"
 	"github.com/hxk622/OmniRouter/internal/pkg/ip"
 	"github.com/hxk622/OmniRouter/internal/pkg/logger"
 	middleware2 "github.com/hxk622/OmniRouter/internal/server/middleware"
 	"github.com/hxk622/OmniRouter/internal/service"
-	"github.com/gin-gonic/gin"
 	"github.com/tidwall/gjson"
 	"go.uber.org/zap"
 )
