@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/hxk622/OmniRouter/internal/server/middleware"
 	"github.com/hxk622/OmniRouter/internal/service"
-	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
 )
 
