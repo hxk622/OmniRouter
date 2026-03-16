@@ -19,14 +19,14 @@ import (
 	"sync"
 	"time"
 
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/hxk622/OmniRouter/internal/config"
 	"github.com/hxk622/OmniRouter/internal/pkg/claude"
 	"github.com/hxk622/OmniRouter/internal/pkg/geminicli"
 	"github.com/hxk622/OmniRouter/internal/pkg/openai"
 	"github.com/hxk622/OmniRouter/internal/util/soraerror"
 	"github.com/hxk622/OmniRouter/internal/util/urlvalidator"
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 // sseDataPrefix matches SSE data lines with optional whitespace after colon.
