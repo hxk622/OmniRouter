@@ -135,7 +135,12 @@ curl -sSL https://raw.githubusercontent.com/hxk622/OmniRouter/main/deploy/instal
 
 ### 方式二：Docker Compose（推荐）
 
-使用 Docker Compose 部署，包含 PostgreSQL 和 Redis 容器。
+支持两种 Docker Compose 形态：
+
+- `docker-compose.local.yml` / `docker-compose.yml`
+  适用于 **OmniRouter + PostgreSQL + Redis 一起容器化部署**
+- `docker-compose.standalone.yml`
+  适用于 **PostgreSQL / Redis 已在宿主机或外部服务器运行**
 
 #### 前置条件
 
@@ -166,6 +171,29 @@ docker-compose logs -f omnirouter
 - 创建 `.env` 文件并填充自动生成的密钥
 - 创建数据目录（使用本地目录，便于备份和迁移）
 - 显示生成的凭证供你记录
+
+#### 环境文件约定
+
+项目使用以下三套环境配置：
+
+- `deploy/.env.dev`
+- `deploy/.env.test`
+- `deploy/.env.prod`
+
+运行时会根据环境把其中一份覆盖生成 `deploy/.env`，程序和 Docker Compose 默认读取 `deploy/.env`。
+
+例如：
+
+```bash
+# 开发环境
+pnpm run env:sync
+
+# 测试环境
+APP_ENV=test pnpm run env:sync
+
+# 生产环境
+APP_ENV=prod pnpm run env:sync
+```
 
 #### 手动部署
 
@@ -216,21 +244,27 @@ openssl rand -hex 32
 ```
 
 ```bash
-# 4. 创建数据目录（本地版）
+# 4. 如果 PostgreSQL / Redis 也使用容器，创建数据目录（本地目录版）
 mkdir -p data postgres_data redis_data
 
-# 5. 启动所有服务
-# 选项 A：本地目录版（推荐 - 易于迁移）
+# 5. 启动方式二选一
+
+# 选项 A：全容器模式（OmniRouter + PostgreSQL + Redis）
 docker-compose -f docker-compose.local.yml up -d
 
-# 选项 B：命名卷版（简单设置）
-docker-compose up -d
+# 选项 B：外部数据库/缓存模式（只启动 OmniRouter）
+# 适用于 PostgreSQL / Redis 已在宿主机或外部服务器运行
+docker-compose -f docker-compose.standalone.yml up -d
 
 # 6. 查看状态
 docker-compose -f docker-compose.local.yml ps
+# 或
+docker-compose -f docker-compose.standalone.yml ps
 
 # 7. 查看日志
 docker-compose -f docker-compose.local.yml logs -f omnirouter
+# 或
+docker-compose -f docker-compose.standalone.yml logs -f omnirouter
 ```
 
 #### 部署版本对比
@@ -239,8 +273,12 @@ docker-compose -f docker-compose.local.yml logs -f omnirouter
 |------|---------|-----------|---------|
 | **docker-compose.local.yml** | 本地目录 | ✅ 简单（打包整个目录） | 生产环境、频繁备份 |
 | **docker-compose.yml** | 命名卷 | ⚠️ 需要 docker 命令 | 简单设置 |
+| **docker-compose.standalone.yml** | 仅 OmniRouter 数据目录 | ✅ 简单 | PostgreSQL / Redis 已外置 |
 
-**推荐：** 使用 `docker-compose.local.yml`（脚本部署）以便更轻松地管理数据。
+**推荐：**
+
+- 如果数据库和缓存也打算容器化：使用 `docker-compose.local.yml`
+- 如果 PostgreSQL / Redis 已经在宿主机或独立服务器上：使用 `docker-compose.standalone.yml`
 
 #### 启用“数据管理”功能（datamanagementd）
 
@@ -263,12 +301,22 @@ docker-compose -f docker-compose.local.yml logs -f omnirouter
 docker-compose -f docker-compose.local.yml logs omnirouter | grep "admin password"
 ```
 
+外部数据库/缓存模式则改为：
+
+```bash
+docker-compose -f docker-compose.standalone.yml logs omnirouter | grep "admin password"
+```
+
 #### 升级
 
 ```bash
-# 拉取最新镜像并重建容器
+# 拉取最新镜像并重建容器（全容器模式）
 docker-compose -f docker-compose.local.yml pull
 docker-compose -f docker-compose.local.yml up -d
+
+# 拉取最新镜像并重建容器（外部数据库/缓存模式）
+docker-compose -f docker-compose.standalone.yml pull
+docker-compose -f docker-compose.standalone.yml up -d
 ```
 
 #### 轻松迁移（本地目录版）
@@ -502,13 +550,20 @@ websocat -H="Sec-WebSocket-Protocol: omnirouter-admin, jwt.<ADMIN_TOKEN>" ws://l
 # 后端（前台滚动日志 + 持续落盘，Ctrl+C 停止）
 pnpm dev:api
 
+# 后端 + Compose 内 PostgreSQL/Redis（全容器模式）
+pnpm dev:api:allinone
+
 # 前端（Vite 开发服务器，Ctrl+C 停止）
 pnpm dev:web
 ```
 
-`pnpm dev:api` 会以前台方式附着到 Docker 里的 Go 后端服务，终端能实时看
-日志，同时日志文件仍会持续写入 `deploy/data/logs/`。按 `Ctrl+C` 会停止这
-个前台附着的后端服务。
+`pnpm dev:api` 会以前台方式附着到 Docker 里的 Go 后端服务，默认连接宿主机
+上的 PostgreSQL / Redis（通过 `deploy/.env` 中的 `DATABASE_HOST` /
+`REDIS_HOST` 控制）。终端能实时看日志，同时日志文件仍会持续写入
+`deploy/data/logs/`。按 `Ctrl+C` 会停止这个前台附着的后端服务。
+
+如果你希望连 PostgreSQL / Redis 也一起用 Compose 启动，使用
+`pnpm dev:api:allinone`。
 
 ```bash
 # 源码模式后端命令（需要本地 Go 工具链和本地依赖）
@@ -595,11 +650,19 @@ omnirouter/
 │
 └── deploy/                   # 部署文件
     ├── docker-compose.yml    # Docker Compose 配置
+    ├── docker-compose.standalone.yml # 仅启动 OmniRouter，连接外部 PG/Redis
     ├── .env.dev              # 开发环境配置
     ├── .env.test             # 测试环境配置
     ├── .env.prod             # 生产环境配置
     ├── config.example.yaml   # 二进制部署完整配置文件
     └── install.sh            # 一键安装脚本
+```
+
+根目录还包含：
+
+```text
+tools/
+└── sync-deploy-env.mjs       # 根据 APP_ENV / OMNI_ENV 生成 deploy/.env
 ```
 
 ## 免责声明
