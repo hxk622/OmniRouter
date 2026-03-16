@@ -31,8 +31,14 @@ backend/.gocache/
 # Node.js / Vue 前端
 # ===================
 node_modules/
+**/node_modules/
 frontend/node_modules/
 frontend/dist/
+frontend/.vite/
+frontend/.pnpm-store/
+frontend/.eslintcache
+frontend/test-results/
+frontend/playwright-report/
 *.local
 *.tsbuildinfo
 vite.config.d.ts
@@ -55,6 +61,9 @@ pnpm-debug.log*
 !deploy/.env.test
 !deploy/.env.prod
 docker-compose.override.yml
+
+# Deploy runtime env file is generated locally and must never be committed.
+deploy/.env
 
 # ===================
 # IDE / 编辑器
@@ -112,6 +121,16 @@ backend/data/
 backend/config.yaml
 deploy/config.yaml
 backend/.installed
+
+# ===================
+# Deploy 运行时产物
+# ===================
+deploy/data/
+deploy/data.backup-*/
+deploy/postgres_data/
+deploy/postgres_data.backup-*/
+deploy/redis_data/
+deploy/redis_data.backup-*/
 
 # ===================
 # 其他
