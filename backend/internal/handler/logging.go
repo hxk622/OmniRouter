@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"github.com/hxk622/OmniRouter/internal/pkg/logger"
 	"github.com/gin-gonic/gin"
+	"github.com/hxk622/OmniRouter/internal/pkg/logger"
 	"go.uber.org/zap"
 )
 

@@ -20,10 +20,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/hxk622/OmniRouter/internal/pkg/antigravity"
-	"github.com/hxk622/OmniRouter/internal/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/hxk622/OmniRouter/internal/pkg/antigravity"
+	"github.com/hxk622/OmniRouter/internal/pkg/logger"
 	"github.com/tidwall/gjson"
 )
 
@@ -41,12 +41,6 @@ const (
 	antigravitySmartRetryMinWait        = 1 * time.Second  // 智能重试最小等待时间
 	antigravitySmartRetryMaxAttempts    = 1                // 智能重试最大次数（仅重试 1 次，防止重复限流/长期等待）
 	antigravityDefaultRateLimitDuration = 30 * time.Second // 默认限流时间（无 retryDelay 时使用）
-
-	// MODEL_CAPACITY_EXHAUSTED 专用重试参数
-	// 模型容量不足时，所有账号共享同一容量池，切换账号无意义
-	// 使用固定 1s 间隔重试，最多重试 60 次
-	antigravityModelCapacityRetryMaxAttempts = 60
-	antigravityModelCapacityRetryWait        = 1 * time.Second
 
 	// Google RPC 状态和类型常量
 	googleRPCStatusResourceExhausted      = "RESOURCE_EXHAUSTED"
@@ -83,6 +77,11 @@ var antigravityPassthroughErrorMessages = []string{
 var (
 	modelCapacityExhaustedMu    sync.RWMutex
 	modelCapacityExhaustedUntil = make(map[string]time.Time) // modelName -> cooldown until
+
+	// MODEL_CAPACITY_EXHAUSTED 专用重试参数。
+	// 保持为变量，便于单测缩短等待时间并稳定复现重试耗尽分支。
+	antigravityModelCapacityRetryMaxAttempts = 60
+	antigravityModelCapacityRetryWait        = 1 * time.Second
 )
 
 const (

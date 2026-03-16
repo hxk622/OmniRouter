@@ -15,15 +15,34 @@ import (
 	"github.com/hxk622/OmniRouter/internal/pkg/pagination"
 )
 
+const (
+	testGeminiBuiltinClientID     = "test-gemini-built-in-client-id"
+	testGeminiBuiltinClientSecret = "test-gemini-built-in-client-secret"
+)
+
+func setTestGeminiBuiltinOAuthConfig(t *testing.T) {
+	t.Helper()
+
+	oldID := geminicli.GeminiCLIOAuthClientID
+	oldSecret := geminicli.GeminiCLIOAuthClientSecret
+	geminicli.GeminiCLIOAuthClientID = ""
+	geminicli.GeminiCLIOAuthClientSecret = ""
+	t.Setenv(geminicli.GeminiCLIOAuthClientIDEnv, testGeminiBuiltinClientID)
+	t.Setenv(geminicli.GeminiCLIOAuthClientSecretEnv, testGeminiBuiltinClientSecret)
+	t.Cleanup(func() {
+		geminicli.GeminiCLIOAuthClientID = oldID
+		geminicli.GeminiCLIOAuthClientSecret = oldSecret
+	})
+}
+
 // =====================
 // 保留原有测试
 // =====================
 
 func TestGeminiOAuthService_GenerateAuthURL_RedirectURIStrategy(t *testing.T) {
 	// NOTE: This test sets process env; it must not run in parallel.
-	// The built-in Gemini CLI client secret is not embedded in this repository.
-	// Tests set a dummy secret via env to simulate operator-provided configuration.
-	t.Setenv(geminicli.GeminiCLIOAuthClientSecretEnv, "test-built-in-secret")
+	// The built-in Gemini CLI credentials are injected via env in tests.
+	setTestGeminiBuiltinOAuthConfig(t)
 
 	type testCase struct {
 		name          string
@@ -46,7 +65,7 @@ func TestGeminiOAuthService_GenerateAuthURL_RedirectURIStrategy(t *testing.T) {
 				},
 			},
 			oauthType:     "google_one",
-			wantClientID:  geminicli.GeminiCLIOAuthClientID,
+			wantClientID:  testGeminiBuiltinClientID,
 			wantRedirect:  geminicli.GeminiCLIRedirectURI,
 			wantScope:     geminicli.DefaultCodeAssistScopes,
 			wantProjectID: "",
@@ -62,7 +81,7 @@ func TestGeminiOAuthService_GenerateAuthURL_RedirectURIStrategy(t *testing.T) {
 				},
 			},
 			oauthType:     "google_one",
-			wantClientID:  geminicli.GeminiCLIOAuthClientID,
+			wantClientID:  testGeminiBuiltinClientID,
 			wantRedirect:  geminicli.GeminiCLIRedirectURI,
 			wantScope:     geminicli.DefaultCodeAssistScopes,
 			wantProjectID: "",
@@ -79,7 +98,7 @@ func TestGeminiOAuthService_GenerateAuthURL_RedirectURIStrategy(t *testing.T) {
 			},
 			oauthType:     "code_assist",
 			projectID:     "my-gcp-project",
-			wantClientID:  geminicli.GeminiCLIOAuthClientID,
+			wantClientID:  testGeminiBuiltinClientID,
 			wantRedirect:  geminicli.GeminiCLIRedirectURI,
 			wantScope:     geminicli.DefaultCodeAssistScopes,
 			wantProjectID: "my-gcp-project",

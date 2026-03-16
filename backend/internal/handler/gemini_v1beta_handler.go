@@ -11,6 +11,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/google/uuid"
 	"github.com/hxk622/OmniRouter/internal/domain"
 	"github.com/hxk622/OmniRouter/internal/pkg/antigravity"
 	"github.com/hxk622/OmniRouter/internal/pkg/gemini"
@@ -20,7 +21,6 @@ import (
 	"github.com/hxk622/OmniRouter/internal/pkg/logger"
 	"github.com/hxk622/OmniRouter/internal/server/middleware"
 	"github.com/hxk622/OmniRouter/internal/service"
-	"github.com/google/uuid"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

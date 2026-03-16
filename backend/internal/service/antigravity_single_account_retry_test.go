@@ -261,6 +261,15 @@ func TestHandleSmartRetry_429_LongDelay_SingleAccountRetry_StillSwitches(t *test
 // TestHandleSmartRetry_503_ShortDelay_SingleAccountRetry_NoRateLimit
 // 503 + retryDelay < 7s + SingleAccountRetry → 智能重试耗尽后直接返回 503，不设限流
 func TestHandleSmartRetry_503_ShortDelay_SingleAccountRetry_NoRateLimit(t *testing.T) {
+	originalAttempts := antigravityModelCapacityRetryMaxAttempts
+	originalWait := antigravityModelCapacityRetryWait
+	antigravityModelCapacityRetryMaxAttempts = 2
+	antigravityModelCapacityRetryWait = 10 * time.Millisecond
+	t.Cleanup(func() {
+		antigravityModelCapacityRetryMaxAttempts = originalAttempts
+		antigravityModelCapacityRetryWait = originalWait
+	})
+
 	// 智能重试也返回 503
 	failRespBody := `{
 		"error": {
