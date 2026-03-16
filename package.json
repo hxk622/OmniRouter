@@ -1,0 +1,10 @@
+{
+  "name": "omnirouter-dev-tools",
+  "private": true,
+  "scripts": {
+    "env:sync": "node ./tools/sync-deploy-env.mjs",
+    "dev:api": "pnpm run env:sync && cd deploy && docker compose -f docker-compose.local.yml up omnirouter",
+    "dev:api:source": "pnpm run env:sync && make -C backend dev",
+    "dev:web": "pnpm run env:sync && pnpm --dir frontend dev"
+  }
+}

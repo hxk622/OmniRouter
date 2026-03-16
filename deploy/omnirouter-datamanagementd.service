@@ -1,0 +1,22 @@
+[Unit]
+Description=OmniRouter Data Management Daemon
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=omnirouter
+Group=omnirouter
+WorkingDirectory=/opt/omnirouter
+ExecStart=/opt/omnirouter/datamanagementd \
+  -socket-path /tmp/omnirouter-datamanagement.sock \
+  -sqlite-path /var/lib/omnirouter/datamanagement/datamanagementd.db \
+  -version 1.0.0
+Restart=always
+RestartSec=5s
+LimitNOFILE=100000
+NoNewPrivileges=true
+PrivateTmp=false
+
+[Install]
+WantedBy=multi-user.target

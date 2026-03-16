@@ -1,0 +1,116 @@
+# =============================================================================
+# OmniRouter Multi-Stage Dockerfile
+# =============================================================================
+# Stage 1: Build frontend
+# Stage 2: Build Go backend with embedded frontend
+# Stage 3: Final minimal image
+# =============================================================================
+
+ARG NODE_IMAGE=node:24-alpine
+ARG GOLANG_IMAGE=golang:1.26.1-alpine
+ARG ALPINE_IMAGE=alpine:3.21
+ARG GOPROXY=https://goproxy.cn,direct
+ARG GOSUMDB=sum.golang.google.cn
+
+# -----------------------------------------------------------------------------
+# Stage 1: Frontend Builder
+# -----------------------------------------------------------------------------
+FROM ${NODE_IMAGE} AS frontend-builder
+
+WORKDIR /app/frontend
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Install dependencies first (better caching)
+COPY frontend/package.json frontend/pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+
+# Copy frontend source and build
+COPY frontend/ ./
+RUN pnpm run build
+
+# -----------------------------------------------------------------------------
+# Stage 2: Backend Builder
+# -----------------------------------------------------------------------------
+FROM ${GOLANG_IMAGE} AS backend-builder
+
+# Build arguments for version info (set by CI)
+ARG VERSION=
+ARG COMMIT=docker
+ARG DATE
+ARG GOPROXY
+ARG GOSUMDB
+
+ENV GOPROXY=${GOPROXY}
+ENV GOSUMDB=${GOSUMDB}
+
+# Install build dependencies
+RUN apk add --no-cache git ca-certificates tzdata
+
+WORKDIR /app/backend
+
+# Copy go mod files first (better caching)
+COPY backend/go.mod backend/go.sum ./
+RUN go mod download
+
+# Copy backend source first
+COPY backend/ ./
+
+# Copy frontend dist from previous stage (must be after backend copy to avoid being overwritten)
+COPY --from=frontend-builder /app/backend/internal/web/dist ./internal/web/dist
+
+# Build the binary (BuildType=release for CI builds, embed frontend)
+# Version precedence: build arg VERSION > cmd/server/VERSION
+RUN VERSION_VALUE="${VERSION}" && \
+    if [ -z "${VERSION_VALUE}" ]; then VERSION_VALUE="$(tr -d '\r\n' < ./cmd/server/VERSION)"; fi && \
+    DATE_VALUE="${DATE:-$(date -u +%Y-%m-%dT%H:%M:%SZ)}" && \
+    CGO_ENABLED=0 GOOS=linux go build \
+    -tags embed \
+    -ldflags="-s -w -X main.Version=${VERSION_VALUE} -X main.Commit=${COMMIT} -X main.Date=${DATE_VALUE} -X main.BuildType=release" \
+    -trimpath \
+    -o /app/omnirouter \
+    ./cmd/server
+
+# -----------------------------------------------------------------------------
+# Stage 3: Final Runtime Image
+# -----------------------------------------------------------------------------
+FROM ${ALPINE_IMAGE}
+
+# Labels
+LABEL maintainer="Wei-Shaw <github.com/Wei-Shaw>"
+LABEL description="OmniRouter - AI API Gateway Platform"
+LABEL org.opencontainers.image.source="https://github.com/hxk622/OmniRouter"
+
+# Install runtime dependencies
+RUN apk add --no-cache \
+    ca-certificates \
+    tzdata \
+    && rm -rf /var/cache/apk/*
+
+# Create non-root user
+RUN addgroup -g 1000 omnirouter && \
+    adduser -u 1000 -G omnirouter -s /bin/sh -D omnirouter
+
+# Set working directory
+WORKDIR /app
+
+# Copy binary/resources with ownership to avoid extra full-layer chown copy
+COPY --from=backend-builder --chown=omnirouter:omnirouter /app/omnirouter /app/omnirouter
+COPY --from=backend-builder --chown=omnirouter:omnirouter /app/backend/resources /app/resources
+
+# Create data directory
+RUN mkdir -p /app/data && chown omnirouter:omnirouter /app/data
+
+# Switch to non-root user
+USER omnirouter
+
+# Expose port (can be overridden by SERVER_PORT env var)
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD wget -q -T 5 -O /dev/null http://localhost:${SERVER_PORT:-8080}/health || exit 1
+
+# Run the application
+ENTRYPOINT ["/app/omnirouter"]

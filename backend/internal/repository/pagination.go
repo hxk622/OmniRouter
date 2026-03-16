@@ -1,0 +1,16 @@
+package repository
+
+import "github.com/hxk622/OmniRouter/internal/pkg/pagination"
+
+func paginationResultFromTotal(total int64, params pagination.PaginationParams) *pagination.PaginationResult {
+	pages := int(total) / params.Limit()
+	if int(total)%params.Limit() > 0 {
+		pages++
+	}
+	return &pagination.PaginationResult{
+		Total:    total,
+		Page:     params.Page,
+		PageSize: params.Limit(),
+		Pages:    pages,
+	}
+}
