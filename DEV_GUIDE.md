@@ -298,8 +298,11 @@ pnpm build
 ### 后端操作
 
 ```bash
-# 根目录快捷命令（Docker 后端前台日志 + 落盘日志，Ctrl+C 停止）
+# 根目录快捷命令（Docker 后端前台日志 + 落盘日志，Ctrl+C 停止；默认连接宿主机 PostgreSQL/Redis）
 pnpm dev:api
+
+# 全容器模式（同时使用 compose 内的 PostgreSQL/Redis）
+pnpm dev:api:allinone
 
 # 源码模式运行后端
 pnpm dev:api:source

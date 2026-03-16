@@ -431,17 +431,21 @@ If you disable URL validation or response header filtering, harden your network 
 #### Development Mode
 
 ```bash
-# Backend (foreground logs + file logs, stop with Ctrl+C)
+# Backend (foreground logs + file logs, stop with Ctrl+C; uses host PostgreSQL/Redis by default)
 pnpm dev:api
+
+# Backend + compose PostgreSQL/Redis (all-in-one mode)
+pnpm dev:api:allinone
 
 # Frontend (Vite dev server, stop with Ctrl+C)
 pnpm dev:web
 ```
 
-`pnpm dev:api` attaches to the Docker-backed Go backend in the foreground, so
-you can watch live logs in the terminal while the service keeps writing log
-files under `deploy/data/logs/`. Press `Ctrl+C` to stop the attached backend
-service.
+`pnpm dev:api` attaches to the Docker-backed Go backend in the foreground,
+builds the local image, and connects to PostgreSQL/Redis on the host machine
+using the values in `deploy/.env`. Use `pnpm dev:api:allinone` if you want the
+compose-managed PostgreSQL/Redis containers as well. Press `Ctrl+C` to stop the
+attached backend service.
 
 ```bash
 # Source-mode backend command (requires local Go toolchain and local infra)
