@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hxk622/OmniRouter/internal/config"
 	coderws "github.com/coder/websocket"
 	"github.com/gin-gonic/gin"
+	"github.com/hxk622/OmniRouter/internal/config"
 	"github.com/stretchr/testify/require"
 	"github.com/tidwall/gjson"
 )

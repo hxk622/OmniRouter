@@ -9,11 +9,11 @@ import (
 	"strings"
 	"sync/atomic"
 
+	coderws "github.com/coder/websocket"
+	"github.com/gin-gonic/gin"
 	"github.com/hxk622/OmniRouter/internal/pkg/logger"
 	"github.com/hxk622/OmniRouter/internal/pkg/openai"
 	openaiwsv2 "github.com/hxk622/OmniRouter/internal/service/openai_ws_v2"
-	coderws "github.com/coder/websocket"
-	"github.com/gin-gonic/gin"
 	"github.com/tidwall/gjson"
 )
 

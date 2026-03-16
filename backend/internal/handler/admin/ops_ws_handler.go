@@ -15,10 +15,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/hxk622/OmniRouter/internal/pkg/logger"
-	"github.com/hxk622/OmniRouter/internal/service"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"github.com/hxk622/OmniRouter/internal/pkg/logger"
+	"github.com/hxk622/OmniRouter/internal/service"
 )
 
 type OpsWSProxyConfig struct {

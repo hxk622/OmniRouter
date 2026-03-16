@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hxk622/OmniRouter/internal/config"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/hxk622/OmniRouter/internal/config"
 	"github.com/stretchr/testify/require"
 )
 

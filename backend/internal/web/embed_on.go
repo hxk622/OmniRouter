@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hxk622/OmniRouter/internal/server/middleware"
 	"github.com/gin-gonic/gin"
+	"github.com/hxk622/OmniRouter/internal/server/middleware"
 )
 
 const (

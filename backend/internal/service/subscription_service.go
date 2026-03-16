@@ -9,11 +9,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/dgraph-io/ristretto"
 	dbent "github.com/hxk622/OmniRouter/ent"
 	"github.com/hxk622/OmniRouter/internal/config"
 	infraerrors "github.com/hxk622/OmniRouter/internal/pkg/errors"
 	"github.com/hxk622/OmniRouter/internal/pkg/pagination"
-	"github.com/dgraph-io/ristretto"
 	"golang.org/x/sync/singleflight"
 )
 

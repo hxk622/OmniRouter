@@ -12,9 +12,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/hxk622/OmniRouter/internal/domain"
 	infraerrors "github.com/hxk622/OmniRouter/internal/pkg/errors"
-	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
 )
 

@@ -1,9 +1,9 @@
 package service
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/hxk622/OmniRouter/internal/config"
 	"github.com/hxk622/OmniRouter/internal/pkg/openai"
-	"github.com/gin-gonic/gin"
 )
 
 const (

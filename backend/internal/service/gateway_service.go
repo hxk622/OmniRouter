@@ -20,6 +20,8 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/cespare/xxhash/v2"
+	"github.com/google/uuid"
 	"github.com/hxk622/OmniRouter/internal/config"
 	"github.com/hxk622/OmniRouter/internal/pkg/claude"
 	"github.com/hxk622/OmniRouter/internal/pkg/ctxkey"
@@ -27,8 +29,6 @@ import (
 	"github.com/hxk622/OmniRouter/internal/pkg/usagestats"
 	"github.com/hxk622/OmniRouter/internal/util/responseheaders"
 	"github.com/hxk622/OmniRouter/internal/util/urlvalidator"
-	"github.com/cespare/xxhash/v2"
-	"github.com/google/uuid"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"

@@ -10,12 +10,12 @@ import (
 	"sync"
 	"time"
 
+	"github.com/dgraph-io/ristretto"
 	"github.com/hxk622/OmniRouter/internal/config"
 	infraerrors "github.com/hxk622/OmniRouter/internal/pkg/errors"
 	"github.com/hxk622/OmniRouter/internal/pkg/ip"
 	"github.com/hxk622/OmniRouter/internal/pkg/pagination"
 	"github.com/hxk622/OmniRouter/internal/pkg/timezone"
-	"github.com/dgraph-io/ristretto"
 	"golang.org/x/sync/singleflight"
 )
 

@@ -13,10 +13,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hxk622/OmniRouter/internal/config"
-	"github.com/hxk622/OmniRouter/internal/pkg/openai"
 	"github.com/cespare/xxhash/v2"
 	"github.com/gin-gonic/gin"
+	"github.com/hxk622/OmniRouter/internal/config"
+	"github.com/hxk622/OmniRouter/internal/pkg/openai"
 	"github.com/stretchr/testify/require"
 )
 

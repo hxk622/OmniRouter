@@ -15,8 +15,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hxk622/OmniRouter/internal/config"
 	"github.com/google/uuid"
+	"github.com/hxk622/OmniRouter/internal/config"
 )
 
 const (

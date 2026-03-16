@@ -9,9 +9,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/gin-gonic/gin"
 	infraerrors "github.com/hxk622/OmniRouter/internal/pkg/errors"
 	"github.com/hxk622/OmniRouter/internal/service"
-	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
 )
 

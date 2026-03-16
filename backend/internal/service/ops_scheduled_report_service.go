@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/hxk622/OmniRouter/internal/config"
 	"github.com/google/uuid"
+	"github.com/hxk622/OmniRouter/internal/config"
 	"github.com/redis/go-redis/v9"
 	"github.com/robfig/cron/v3"
 )

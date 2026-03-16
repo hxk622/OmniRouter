@@ -9,8 +9,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	errors2 "github.com/hxk622/OmniRouter/internal/pkg/errors"
 	"github.com/gin-gonic/gin"
+	errors2 "github.com/hxk622/OmniRouter/internal/pkg/errors"
 	"github.com/stretchr/testify/require"
 )
 

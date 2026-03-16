@@ -9,8 +9,8 @@ import (
 	"math/rand/v2"
 	"time"
 
-	"github.com/hxk622/OmniRouter/internal/config"
 	"github.com/dgraph-io/ristretto"
+	"github.com/hxk622/OmniRouter/internal/config"
 )
 
 type apiKeyAuthCacheConfig struct {

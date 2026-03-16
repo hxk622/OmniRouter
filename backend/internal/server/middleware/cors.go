@@ -6,8 +6,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/hxk622/OmniRouter/internal/config"
 	"github.com/gin-gonic/gin"
+	"github.com/hxk622/OmniRouter/internal/config"
 )
 
 var corsWarningOnce sync.Once

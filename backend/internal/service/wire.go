@@ -5,9 +5,9 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/google/wire"
 	"github.com/hxk622/OmniRouter/internal/config"
 	"github.com/hxk622/OmniRouter/internal/pkg/logger"
-	"github.com/google/wire"
 	"github.com/redis/go-redis/v9"
 )
 

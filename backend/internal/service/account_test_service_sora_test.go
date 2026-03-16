@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hxk622/OmniRouter/internal/config"
 	"github.com/gin-gonic/gin"
+	"github.com/hxk622/OmniRouter/internal/config"
 	"github.com/stretchr/testify/require"
 )
 

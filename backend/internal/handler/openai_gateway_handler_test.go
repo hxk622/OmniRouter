@@ -10,11 +10,11 @@ import (
 	"testing"
 	"time"
 
+	coderws "github.com/coder/websocket"
+	"github.com/gin-gonic/gin"
 	pkghttputil "github.com/hxk622/OmniRouter/internal/pkg/httputil"
 	"github.com/hxk622/OmniRouter/internal/server/middleware"
 	"github.com/hxk622/OmniRouter/internal/service"
-	coderws "github.com/coder/websocket"
-	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tidwall/gjson"

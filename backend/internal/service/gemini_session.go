@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/hxk622/OmniRouter/internal/pkg/antigravity"
 	"github.com/cespare/xxhash/v2"
+	"github.com/hxk622/OmniRouter/internal/pkg/antigravity"
 )
 
 // shortHash 使用 XXHash64 + Base36 生成短 hash（16 字符）
