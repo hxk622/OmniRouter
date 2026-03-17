@@ -561,8 +561,8 @@ func AutoSetupFromEnv() error {
 			EnableTLS: getEnvOrDefault("REDIS_ENABLE_TLS", "false") == "true",
 		},
 		Admin: AdminConfig{
-			Email:    getEnvOrDefault("ADMIN_EMAIL", "admin@omnirouter.local"),
-			Password: getEnvOrDefault("ADMIN_PASSWORD", ""),
+			Email:    getEnvOrDefault("ADMIN_EMAIL", "admin@omnirouter.dev"),
+			Password: getEnvOrDefault("ADMIN_PASSWORD", "OmniRouterAdmin123!"),
 		},
 		Server: ServerConfig{
 			Host: getEnvOrDefault("SERVER_HOST", "0.0.0.0"),

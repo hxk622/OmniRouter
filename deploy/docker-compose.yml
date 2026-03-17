@@ -73,8 +73,8 @@ services:
       # =======================================================================
       # Admin Account (auto-created on first run)
       # =======================================================================
-      - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@omnirouter.local}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-}
+      - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@omnirouter.dev}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-OmniRouterAdmin123!}
 
       # =======================================================================
       # JWT Configuration

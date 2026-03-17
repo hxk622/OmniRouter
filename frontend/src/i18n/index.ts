@@ -4,8 +4,8 @@ type LocaleCode = 'en' | 'zh'
 
 type LocaleMessages = Record<string, any>
 
-const LOCALE_KEY = 'omnirouter_locale'
-const DEFAULT_LOCALE: LocaleCode = 'en'
+const LOCALE_KEY = 'omnirouter_locale_v2'
+const DEFAULT_LOCALE: LocaleCode = 'zh'
 
 const localeLoaders: Record<LocaleCode, () => Promise<{ default: LocaleMessages }>> = {
   en: () => import('./locales/en'),
