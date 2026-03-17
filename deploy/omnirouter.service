@@ -1,14 +1,15 @@
 [Unit]
 Description=OmniRouter - AI API Gateway Platform
 Documentation=https://github.com/hxk622/OmniRouter
-After=network.target postgresql.service redis.service
-Wants=postgresql.service redis.service
+After=network-online.target postgresql.service redis.service
+Wants=network-online.target postgresql.service redis.service
 
 [Service]
 Type=simple
 User=omnirouter
 Group=omnirouter
 WorkingDirectory=/opt/omnirouter
+EnvironmentFile=-/etc/omnirouter/omnirouter.env
 ExecStart=/opt/omnirouter/omnirouter
 Restart=always
 RestartSec=5
@@ -23,8 +24,8 @@ ProtectHome=true
 PrivateTmp=true
 ReadWritePaths=/opt/omnirouter
 
-# Environment - Server configuration
-# Modify these values to change listen address and port
+# Environment - defaults
+# Override them in /etc/omnirouter/omnirouter.env when deploying.
 Environment=GIN_MODE=release
 Environment=SERVER_HOST=0.0.0.0
 Environment=SERVER_PORT=8080
