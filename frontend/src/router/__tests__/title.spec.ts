@@ -10,9 +10,9 @@ describe('resolveDocumentTitle', () => {
     expect(resolveDocumentTitle(undefined, 'My Site')).toBe('My Site')
   })
 
-  it('站点名为空时，回退默认站点名', () => {
-    expect(resolveDocumentTitle('Dashboard', '')).toBe('Dashboard - OmniRouter')
-    expect(resolveDocumentTitle(undefined, '   ')).toBe('OmniRouter')
+  it('标题基准为空时，回退默认页签标题', () => {
+    expect(resolveDocumentTitle('Dashboard', '')).toBe('Dashboard - 世界级大模型聚合平台')
+    expect(resolveDocumentTitle(undefined, '   ')).toBe('世界级大模型聚合平台')
   })
 
   it('站点名变更时仅影响后续路由标题计算', () => {

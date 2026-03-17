@@ -4,13 +4,12 @@ import App from './App.vue'
 import router from './router'
 import i18n, { initI18n } from './i18n'
 import { useAppStore } from '@/stores/app'
+import { DEFAULT_DOCUMENT_TITLE_BASE } from '@/router/title'
 import './style.css'
 
 function initThemeClass() {
   const savedTheme = localStorage.getItem('theme')
-  const shouldUseDark =
-    savedTheme === 'dark' ||
-    (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  const shouldUseDark = savedTheme ? savedTheme === 'dark' : true
   document.documentElement.classList.toggle('dark', shouldUseDark)
 }
 
@@ -27,10 +26,7 @@ async function bootstrap() {
   const appStore = useAppStore()
   appStore.initFromInjectedConfig()
 
-  // Set document title immediately after config is loaded
-  if (appStore.siteName && appStore.siteName !== 'OmniRouter') {
-    document.title = `${appStore.siteName} - AI API Gateway`
-  }
+  document.title = appStore.siteSubtitle || DEFAULT_DOCUMENT_TITLE_BASE
 
   await initI18n()
 

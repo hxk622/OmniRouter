@@ -25,6 +25,7 @@ export const useAppStore = defineStore('app', () => {
   const publicSettingsLoaded = ref<boolean>(false)
   const publicSettingsLoading = ref<boolean>(false)
   const siteName = ref<string>('OmniRouter')
+  const siteSubtitle = ref<string>('世界级大模型聚合平台')
   const siteLogo = ref<string>('')
   const siteVersion = ref<string>('')
   const contactInfo = ref<string>('')
@@ -285,6 +286,7 @@ export const useAppStore = defineStore('app', () => {
   function applySettings(config: PublicSettings): void {
     cachedPublicSettings.value = config
     siteName.value = config.site_name || 'OmniRouter'
+    siteSubtitle.value = config.site_subtitle || '世界级大模型聚合平台'
     siteLogo.value = config.site_logo || ''
     siteVersion.value = config.version || ''
     contactInfo.value = config.contact_info || ''
@@ -320,7 +322,7 @@ export const useAppStore = defineStore('app', () => {
         turnstile_site_key: '',
         site_name: siteName.value,
         site_logo: siteLogo.value,
-        site_subtitle: '',
+        site_subtitle: siteSubtitle.value,
         api_base_url: apiBaseUrl.value,
         contact_info: contactInfo.value,
         doc_url: docUrl.value,
@@ -386,6 +388,7 @@ export const useAppStore = defineStore('app', () => {
     // Public settings state
     publicSettingsLoaded,
     siteName,
+    siteSubtitle,
     siteLogo,
     siteVersion,
     contactInfo,

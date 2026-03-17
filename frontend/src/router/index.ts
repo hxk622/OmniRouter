@@ -446,13 +446,13 @@ router.beforeEach((to, _from, next) => {
     const menuItem = publicItems.find((item) => item.id === id)
       ?? (authStore.isAdmin ? adminSettingsStore.customMenuItems.find((item) => item.id === id) : undefined)
     if (menuItem?.label) {
-      const siteName = appStore.siteName || 'OmniRouter'
-      document.title = `${menuItem.label} - ${siteName}`
+      const titleBase = appStore.siteSubtitle || '世界级大模型聚合平台'
+      document.title = `${menuItem.label} - ${titleBase}`
     } else {
-      document.title = resolveDocumentTitle(to.meta.title, appStore.siteName, to.meta.titleKey as string)
+      document.title = resolveDocumentTitle(to.meta.title, appStore.siteSubtitle, to.meta.titleKey as string)
     }
   } else {
-    document.title = resolveDocumentTitle(to.meta.title, appStore.siteName, to.meta.titleKey as string)
+    document.title = resolveDocumentTitle(to.meta.title, appStore.siteSubtitle, to.meta.titleKey as string)
   }
 
   // Check if route requires authentication
